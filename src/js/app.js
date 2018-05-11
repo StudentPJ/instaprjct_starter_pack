@@ -1,61 +1,33 @@
-// Initialize Firebase
-var config = {
-	apiKey: "AIzaSyC8jSUIU7CizElYAx21nBMz9nu0UemZ2mw",
-	authDomain: "instaprjct-42ab8.firebaseapp.com",
-	databaseURL: "https://instaprjct-42ab8.firebaseio.com",
-	projectId: "instaprjct-42ab8",
-	storageBucket: "instaprjct-42ab8.appspot.com",
-	messagingSenderId: "881000761959"
-};
+//=require 'routes/*'
+//=require 'firebase.config.js'
 
-firebase.initializeApp(config);
+var rootEl = document.getElementById('root');
+firebase.initializeApp(firebaseConfig);
 
-/*page('/', () => {
-	var root = document.getElementById('root');
-
-	root.innerHTML = templates.main();
-});
-
-page('/about', () => {
-	console.log('about');
-});*/
-
+page('/', authMiddleware);
 page('/', home);
-
-function home() {
-	var rootEl = document.getElementById('root');
-	rootEl.innerHTML = templates.main();
-
-	var login = document.getElementById('login');
-	var create = document.getElementById('create');
-	var logout = document.getElementById('logout');
-
-	login.addEventListener('click', () => {
-		firebase.auth().signInWithEmailAndPassword('user1@mai2.com', '123456789');
-	});
-	create.addEventListener('click', () => {
-		firebase.auth().createUserWithEmailAndPassword('user1@mai2.com', '123456789');
-	});
-	logout.addEventListener('click', () => {
-		firebase.auth().signOut();
-	});
-
-}
-
 page('/signup', signup);
-
-function signup () {
-	var rootEl = document.getElementById('root');
-	var signUpBtn = document.querySelector('#signup-form button');
-
-	rootEl.innerHTML = templates.signup();
-
-	signUpBtn.addEventListener('click', () => {
-		var emailVal = document.querySelector('#signup-form [name="email"]').value;
-		var passVal = document.querySelector('#signup-form [name="password"]').value;
-
-		firebase.auth().createUserWithEmailAndPassword(emailVal, passVal);
-	});
-}
+page('/login', login);
+page('/profile-edit', profileEdit);
+page('*', errorPage);
 
 page();
+
+function authMiddleware(ctx, next) {
+	var user = firebase.auth().currentUser;
+
+	console.log(ctx);
+	if(!user) {
+		firebase.database().ref(`users/${user.uid}`)
+			.once('value')
+			.then((userInfo) => {
+				ctx.user = userInfo.val();
+				next();
+			})
+	} else {
+		ctx.user = null;
+		next();
+	}
+
+
+}
