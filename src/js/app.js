@@ -42,4 +42,20 @@ function home() {
 
 }
 
+page('/signup', signup);
+
+function signup () {
+	var rootEl = document.getElementById('root');
+	var signUpBtn = document.querySelector('#signup-form button');
+
+	rootEl.innerHTML = templates.signup();
+
+	signUpBtn.addEventListener('click', () => {
+		var emailVal = document.querySelector('#signup-form [name="email"]').value;
+		var passVal = document.querySelector('#signup-form [name="password"]').value;
+
+		firebase.auth().createUserWithEmailAndPassword(emailVal, passVal);
+	});
+}
+
 page();
