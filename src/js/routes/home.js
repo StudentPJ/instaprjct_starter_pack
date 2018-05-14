@@ -1,6 +1,10 @@
 function home(ctx) {
 
-	rootEl.innerHTML = templates.main();
+	console.log(ctx);
+	rootEl.innerHTML = templates.main({
+		user: ctx.user,
+		profile: ctx.user
+	});
 
 	/*var login = document.getElementById('login');
 	var create = document.getElementById('create');

@@ -1,3 +1,3 @@
 function profileEdit() {
-	rootEl.innerHTML = templates.profile-edit();
+	rootEl.innerHTML = templates['profile-edit']();
 }

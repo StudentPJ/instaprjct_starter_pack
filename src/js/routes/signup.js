@@ -1,6 +1,7 @@
 function signup () {
 	rootEl.innerHTML = templates.signup();
 	var form = document.getElementById('signup-form');
+
 	var {email, username, displayName, password, passwordConfirm} = form;
 
 	form.addEventListener('submit', (e) => {
@@ -8,17 +9,38 @@ function signup () {
 
 		if(!isValidMail(email.value)) {
 			email.parentNode.classList.add('has-error');
-			email.nextElementSibling.innerHTML = 'Email is required';
+			email.nextElementSibling.innerText = 'Email is required';
+		} else {
+			email.parentNode.classList.remove('has-error');
+			email.parentNode.classList.add('has-success');
+			email.nextElementSibling.innerText = '';
 		}
 
 		if(!isValidPassword(password.value)) {
 			password.parentNode.classList.add('has-error');
-			password.nextElementSibling.innerHTML = 'Password is required';
+			password.nextElementSibling.innerText = 'Password is required';
+		} else {
+			password.parentNode.classList.remove('has-error');
+			password.parentNode.classList.add('has-success');
+			password.nextElementSibling.innerText = '';
+		}
+
+		if(!isValidUsername(username.value)) {
+			username.parentNode.classList.add('has-error');
+			username.nextElementSibling.innerText = 'Username should have only letters';
+		} else {
+			username.parentNode.classList.remove('has-error');
+			username.parentNode.classList.add('has-success');
+			username.nextElementSibling.innerText = '';
 		}
 
 		if(password.value !== passwordConfirm.value) {
 			passwordConfirm.parentNode.classList.add('has-error');
-			passwordConfirm.nextElementSibling.innerHTML = 'Wrong passwordConfirm';
+			passwordConfirm.nextElementSibling.innerText = 'Wrong password confirm';
+		} else {
+			passwordConfirm.parentNode.classList.remove('has-error');
+			passwordConfirm.parentNode.classList.add('has-success');
+			passwordConfirm.nextElementSibling.innerText = '';
 		}
 
 		if(isValidMail(email.value) && isValidPassword(password.value)) {
@@ -27,15 +49,20 @@ function signup () {
 					firebase.database().ref(`users/${value.uid}`).set({
 						email: email.value,
 						username: username.value,
-						displayName: displayName.value
+						displayName: displayName.value,
+						createdAt: (new Date()).toISOString()
 					})
+						.then(() => {
+							page('/');
+						})
 				});
 		}
 	});
 }
 
 function isValidMail(value) {
-	return value.includes('@');
+	const emailRe = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+	return emailRe.test(value);
 }
 
 function isValidPassword(value) {

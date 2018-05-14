@@ -16,8 +16,7 @@ page();
 function authMiddleware(ctx, next) {
 	var user = firebase.auth().currentUser;
 
-	console.log(ctx);
-	if(!user) {
+	if(user) {
 		firebase.database().ref(`users/${user.uid}`)
 			.once('value')
 			.then((userInfo) => {
