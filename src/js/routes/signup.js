@@ -4,7 +4,19 @@ function signup () {
 
 	var {email, username, displayName, password, passwordConfirm} = form;
 
-	form.addEventListener('submit', (e) => {
+	window.email = new FormField(email, {
+		validations: ['required', 'hasAtSymbol']
+	});
+
+	window.password = new FormField(password, {
+		validations: ['password']
+	});
+
+	window.username = new FormField(username, {
+		validations: ['username']
+	});
+
+	/*form.addEventListener('submit', (e) => {
 		e.preventDefault();
 
 		if(!isValidMail(email.value)) {
@@ -57,9 +69,10 @@ function signup () {
 						})
 				});
 		}
-	});
+	});*/
 }
 
+/*
 function isValidMail(value) {
 	const emailRe = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 	return emailRe.test(value);
@@ -71,4 +84,4 @@ function isValidPassword(value) {
 
 function isValidUsername(value) {
 	return /\w+/.test(value);
-}
+}*/

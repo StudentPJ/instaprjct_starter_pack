@@ -1,5 +1,6 @@
-//=require 'routes/*'
 //=require 'firebase.config.js'
+//=require 'components/*'
+//=require 'routes/*'
 
 var rootEl = document.getElementById('root');
 firebase.initializeApp(firebaseConfig);
