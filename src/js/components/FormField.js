@@ -25,6 +25,7 @@ class FormField {
 			if(validators[element](this.element.value) === false) {
 				isValid = false;
 			}
+			this.errors.push(errorTexts[element]);
 		});
 
 		return isValid;
@@ -38,17 +39,23 @@ class FormField {
 
 	setErrorState(message) {
 		this.element.parentNode.classList.add(this.options.errorClass);
-		this.element.nextElementSibling.innerText = errorTexts.password;
+		this.element.nextElementSibling.innerText = this.errors;
+		if(this.errors.length !== 0) {
+			this.errors = [];
+		}
 	}
 
 	setSuccessState() {
+		this.errors = [];
 		this.element.parentNode.classList.add(this.options.successClass);
 	}
 
 	validate() {
 		if(this.isValid() === false) {
+			this.resetState();
 			this.setErrorState();
 		} else {
+			this.resetState();
 			this.setSuccessState();
 		}
 	}
