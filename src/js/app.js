@@ -1,33 +1,38 @@
+//=require 'helpers/*.js'
 //=require 'firebase.config.js'
-//=require 'components/*'
-//=require 'routes/*'
+//=require 'components/*.js'
+//=require 'routes/*.js'
 
 var rootEl = document.getElementById('root');
+
 firebase.initializeApp(firebaseConfig);
 
-page('/', authMiddleware);
+page('*', authMiddleware);
 page('/', home);
 page('/signup', signup);
 page('/login', login);
+page('/logout', logout);
 page('/profile-edit', profileEdit);
+page('/add', add);
 page('*', errorPage);
-
-page();
 
 function authMiddleware(ctx, next) {
 	var user = firebase.auth().currentUser;
 
-	if(user) {
+	if (user) {
 		firebase.database().ref(`users/${user.uid}`)
 			.once('value')
 			.then((userInfo) => {
-				ctx.user = userInfo.val();
+				ctx.user = ctx.profile = userInfo.val();
 				next();
-			})
+			});
 	} else {
-		ctx.user = null;
+		ctx.user =ctx.profile = null;
 		next();
 	}
-
-
 }
+
+const unsubsribe = firebase.auth().onAuthStateChanged(() => {
+	page();
+	unsubsribe();
+});

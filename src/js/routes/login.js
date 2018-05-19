@@ -8,25 +8,18 @@ function login() {
 	form.addEventListener('submit', (e) => {
 		e.preventDefault();
 
-		if(!isValidMail(email.value)) {
-			email.parentNode.classList.add('has-error');
-			email.nextElementSibling.innerText = 'Email is required';
-		} else {
-			email.parentNode.classList.remove('has-error');
-			email.parentNode.classList.add('has-success');
-			email.nextElementSibling.innerText = '';
-		}
+		let emailValidate = new FormField(email, {
+			validations: ['required', 'hasAtSymbol']
+		});
 
-		if(!isValidPassword(password.value)) {
-			password.parentNode.classList.add('has-error');
-			password.nextElementSibling.innerText = 'Password is required';
-		} else {
-			password.parentNode.classList.remove('has-error');
-			password.parentNode.classList.add('has-success');
-			password.nextElementSibling.innerText = '';
-		}
+		let passwordValidate = new FormField(password, {
+			validations: ['password']
+		});
 
-		if(isValidMail(email.value) && isValidPassword(password.value)) {
+		emailValidate.validate();
+		passwordValidate.validate();
+
+		if(emailValidate.isValid() && passwordValidate.isValid()) {
 			firebase.auth().signInWithEmailAndPassword(email.value, password.value)
 				.then(() => {
 					page('/');
@@ -34,13 +27,4 @@ function login() {
 		}
 	});
 
-}
-
-function isValidMail(value) {
-	const emailRe = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-	return emailRe.test(value);
-}
-
-function isValidPassword(value) {
-	return value.length >= 6;
 }

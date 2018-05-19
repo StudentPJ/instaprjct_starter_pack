@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "caman-dist-only": "^4.1.3",
     "firebase": "^3.4.1",
     "font-awesome": "^4.6.3",
     "handlebars": "^4.0.5",

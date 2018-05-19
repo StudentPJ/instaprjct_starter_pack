@@ -2,14 +2,16 @@ const errorTexts = {
 	required: 'Field should be required',
 	hasAtSymbol: 'Field should has @',
 	password: 'Password should be at least six symbols',
-	username: 'Username should contains only letters'
+	username: 'Username should contains only letters',
+	displayName: 'Username should contains only letters'
 };
 
 const validators = {
 	required: value => value.length !== 0,
 	hasAtSymbol: value => value.indexOf('@') !== -1,
 	password: value => value.length > 6,
-	username: value =>  /\w+/.test(value)
+	username: value =>  /\w+/.test(value),
+	displayName: value => /\w+/.test(value)
 };
 
 class FormField {
@@ -20,15 +22,17 @@ class FormField {
 	}
 
 	isValid() {
-		let isValid = true;
-		this.options.validations.forEach((element) => {
-			if(validators[element](this.element.value) === false) {
-				isValid = false;
-			}
-			this.errors.push(errorTexts[element]);
-		});
+		for(let i = 0; i < this.options.validations.length; i++) {
+			let valName = this.options.validations[i];
 
-		return isValid;
+			if(validators[valName](this.element.value) === false) {
+				this.errors.push(errorTexts[valName]);
+				return false;
+			}
+
+		}
+
+		return true;
 	}
 
 	resetState() {

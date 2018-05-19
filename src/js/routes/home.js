@@ -1,23 +1,35 @@
 function home(ctx) {
-
 	console.log(ctx);
 	rootEl.innerHTML = templates.main({
 		user: ctx.user,
 		profile: ctx.user
 	});
 
-	/*var login = document.getElementById('login');
-	var create = document.getElementById('create');
-	var logout = document.getElementById('logout');
+	if (!ctx.user) {
+		return;
+	}
 
-	login.addEventListener('click', () => {
-		firebase.auth().signInWithEmailAndPassword('user1@mai2.com', '123456789');
-	});
-	create.addEventListener('click', () => {
-		firebase.auth().createUserWithEmailAndPassword('user1@mai2.com', '123456789');
-	});
-	logout.addEventListener('click', () => {
-		firebase.auth().signOut();
-	});*/
+	const feed  = document.getElementById('feed');
+	const dbRef = firebase.database().ref();
+
+	dbRef
+		.child('posts')
+		.limitToLast(10)
+		.once('value', snapshot => {
+			const entries = snapshot.val();
+			if (!entries) return;
+			Object.keys(entries).forEach((key) => {
+				let entry = entries[key];
+				const post = new Post(entry, { currentUser: ctx.user });
+				feed.insertBefore(post.getElement(), feed.firstElementChild);
+			})
+		});
+
+
+	/*let likeBtn = [].slice.call(document.querySelectorAll('.post__like'));
+	let likeBtn1 = document.querySelectorAll('.post__like');
+
+	console.log('111', likeBtn);
+	console.log('111', likeBtn1);*/
 
 }
