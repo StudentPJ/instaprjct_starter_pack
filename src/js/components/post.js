@@ -33,6 +33,19 @@ class Post {
 		console.log('this is this', this);
 		console.timeEnd('render');
 
+		/*---=== update db data on like or dislike ===---*/
+		function dbUpdate(elemThis, child) {
+			firebase.database().ref(`posts/${elemThis.data.id}`).child(child).update({
+				[elemThis.currentUser.uid]: {
+					createdByUserName: elemThis.currentUser.username,
+					createdByUserEmail: elemThis.currentUser.email,
+					type: 'default',
+					createdAt: (new Date()).toLocaleString('uk')
+				}
+			});
+		}
+		/*---=== /update db data on like or dislike ===---*/
+
 		/*---=== click on like or dislike ===---*/
 		this.element.addEventListener('click', (e) => {
 			e.stopImmediatePropagation();
@@ -40,20 +53,17 @@ class Post {
 			let clickTargetClassList = e.target.className.split(' ');
 
 			if (clickTargetClassList.indexOf('fa-heart-o') === 1) {
-				console.log('like');
-
-				firebase.database().ref(`posts/${this.data.id}`).child('likes').update({
-					[this.currentUser.uid]: {
-						type: 'default',
-						createdAt: (new Date()).toISOString()
-					}
-				});
-
-			} else if (clickTargetClassList.indexOf('custom-icon--broken-heart')) {
-				console.log('dislike');
+				// console.log('like');
+				dbUpdate(this, 'likes');
+			} else if (clickTargetClassList.indexOf('custom-icon--broken-heart') === 1) {
+				// console.log('dislike');
+				dbUpdate(this, 'dislikes');
 			}
 		});
 		/*---=== /click on like or dislike ===---*/
+
+		// var mostLikedPosts = firebase.database().ref('posts').orderByChild('likes');
+		// console.log(mostLikedPosts);
 
 	}
 

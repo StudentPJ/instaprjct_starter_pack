@@ -1,15 +1,33 @@
-/*
-body {
-  background-color red
-}*/
-.custom-icon
-  display inline-block
-  width 18px
-  height 18px
+.post__like {
 
-  svg
-    pointer-events none
+	span.fa {
+		transition: transform .225s ease;
 
-  &--broken-heart-active
-	  svg
-	    fill red
+		&:hover {
+			transform: scale(1.2);
+		}
+	}
+}
+
+.custom-icon {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	margin-right: 4px;
+	transition: transform .225s ease;
+
+	&:hover {
+		transform: scale(1.2);
+	}
+
+	svg {
+		pointer-events: none;
+	}
+
+	&--broken-heart-active {
+
+		svg {
+			fill: red;
+		}
+	}
+}

@@ -17,6 +17,7 @@ function home(ctx) {
 		.limitToLast(10)
 		.once('value', snapshot => {
 			const entries = snapshot.val();
+			console.log('entries::: =>', entries);
 			if (!entries) return;
 			Object.keys(entries).forEach((key) => {
 				let entry = entries[key];
