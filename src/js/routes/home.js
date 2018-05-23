@@ -15,8 +15,33 @@ function home(ctx) {
 	dbRef
 		.child('posts')
 		.orderByChild('likesCountNum')
-		.limitToLast(10)
-		.once('value', snapshot => {
+		.limitToLast(3)
+
+		.once('value')
+			.then(snapshot => {
+				/*const entries = snapshot.val();
+				console.log('entries::: =>', entries);
+				if (!entries) return;
+				Object.keys(entries).forEach(key => {
+					let entry = entries[key];
+					const post = new Post(entry, { currentUser: ctx.user });
+					feed.insertBefore(post.getElement(), feed.firstElementChild);
+				})*/
+
+				snapshot.forEach((child, index) => {
+					// console.log(child.val());
+
+					const entries = child.val();
+
+					console.log(entries);
+
+					/*let entry = entries[index];
+					const post = new Post(entry, { currentUser: ctx.user });
+					feed.insertBefore(post.getElement(), feed.firstElementChild);*/
+				});
+			});
+
+		/*.once('value', snapshot => {
 			const entries = snapshot.val();
 			console.log('entries::: =>', entries);
 			if (!entries) return;
@@ -25,5 +50,5 @@ function home(ctx) {
 				const post = new Post(entry, { currentUser: ctx.user });
 				feed.insertBefore(post.getElement(), feed.firstElementChild);
 			})
-		});
+		});*/
 }
