@@ -15,40 +15,17 @@ function home(ctx) {
 	dbRef
 		.child('posts')
 		.orderByChild('likesCountNum')
-		.limitToLast(3)
-
+		.limitToLast(10)
 		.once('value')
 			.then(snapshot => {
-				/*const entries = snapshot.val();
-				console.log('entries::: =>', entries);
-				if (!entries) return;
-				Object.keys(entries).forEach(key => {
-					let entry = entries[key];
-					const post = new Post(entry, { currentUser: ctx.user });
+				snapshot.forEach(childSnapshot => {
+					let childKey = childSnapshot.key;
+					let childData = childSnapshot.val();
+
+					if (!childData) return;
+
+					const post = new Post(childKey, { currentUser: ctx.user });
 					feed.insertBefore(post.getElement(), feed.firstElementChild);
-				})*/
-
-				snapshot.forEach((child, index) => {
-					// console.log(child.val());
-
-					const entries = child.val();
-
-					console.log(entries);
-
-					/*let entry = entries[index];
-					const post = new Post(entry, { currentUser: ctx.user });
-					feed.insertBefore(post.getElement(), feed.firstElementChild);*/
 				});
 			});
-
-		/*.once('value', snapshot => {
-			const entries = snapshot.val();
-			console.log('entries::: =>', entries);
-			if (!entries) return;
-			Object.keys(entries).forEach((key) => {
-				let entry = entries[key];
-				const post = new Post(entry, { currentUser: ctx.user });
-				feed.insertBefore(post.getElement(), feed.firstElementChild);
-			})
-		});*/
 }
