@@ -11,7 +11,7 @@ class Post {
 		this.disliked = false; // is post disliked by currentUser?
 
 		this._onDataRetrieved = this._onDataRetrieved.bind(this);
-		// this._onDataChanged()
+		// this._onDataChanged();
 
 		this._setupDomElement();
 		this._setupDbRef(post);
@@ -33,6 +33,14 @@ class Post {
 		console.log('this is this', this);
 		console.timeEnd('render');
 
+		/*---=== update likes count ===---*/
+		function updateLikeCount(elemThis) {
+			firebase.database().ref(`posts/${elemThis.data.id}`).update({
+				likesCountNum: Object.keys((elemThis.data && elemThis.data.likes) || {}).length
+			});
+		}
+		/*---=== /update likes count ===---*/
+
 		/*---=== update db data on like or dislike ===---*/
 		function dbUpdate(elemThis, child) {
 			firebase.database().ref(`posts/${elemThis.data.id}`).child(child).update({
@@ -40,7 +48,7 @@ class Post {
 					createdByUserName: elemThis.currentUser.username,
 					createdByUserEmail: elemThis.currentUser.email,
 					type: 'default',
-					createdAt: (new Date()).toLocaleString('uk')
+					createdAt: (new Date()).toLocaleString('uk'),
 				}
 			});
 		}
@@ -55,15 +63,14 @@ class Post {
 			if (clickTargetClassList.indexOf('fa-heart-o') === 1) {
 				// console.log('like');
 				dbUpdate(this, 'likes');
+				updateLikeCount(this);
+
 			} else if (clickTargetClassList.indexOf('custom-icon--broken-heart') === 1) {
 				// console.log('dislike');
 				dbUpdate(this, 'dislikes');
 			}
 		});
 		/*---=== /click on like or dislike ===---*/
-
-		// var mostLikedPosts = firebase.database().ref('posts').orderByChild('likes');
-		// console.log(mostLikedPosts);
 
 	}
 
@@ -92,6 +99,7 @@ class Post {
 		this.element.setAttribute('data-post', this.data.id);
 		this.liked = !!(this.data.likes && this.data.likes[this.currentUser.uid]);
 		this.disliked = !!(this.data.dislikes && this.data.dislikes[this.currentUser.uid]);
+		// this.likesCountNum = this.likesCount.likesCountNum
 		this.render();
 		console.log('data retrived', this.data);
 	}

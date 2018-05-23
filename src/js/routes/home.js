@@ -14,6 +14,7 @@ function home(ctx) {
 
 	dbRef
 		.child('posts')
+		.orderByChild('likesCountNum')
 		.limitToLast(10)
 		.once('value', snapshot => {
 			const entries = snapshot.val();
@@ -25,12 +26,4 @@ function home(ctx) {
 				feed.insertBefore(post.getElement(), feed.firstElementChild);
 			})
 		});
-
-
-	/*let likeBtn = [].slice.call(document.querySelectorAll('.post__like'));
-	let likeBtn1 = document.querySelectorAll('.post__like');
-
-	console.log('111', likeBtn);
-	console.log('111', likeBtn1);*/
-
 }
