@@ -1,3 +1,28 @@
+.custom-icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	stroke-width: 0;
+	stroke: currentColor;
+	fill: currentColor;
+	transition: color .225s ease;
+}
+
+svg[class*="custom-icon-"] {
+	color: #333333;
+}
+
+.custom-icon-empty-basket,
+.custom-icon-full-basket {
+	width: 20px;
+	height: 20px;
+}
+
+.custom-icon.custom-icon-button-cross {
+	color: #ffffff;
+	fill: #000000;
+}
+
 .post__like {
 
 	span.fa {
@@ -9,25 +34,15 @@
 	}
 }
 
-.custom-icon {
-	display: inline-block;
+.custom-icon-broken-heart {
 	width: 18px;
 	height: 18px;
 	margin-right: 4px;
-	transition: transform .225s ease;
+}
+.custom-icon-broken-heart-active {
+	fill: red;
+}
 
-	&:hover {
-		transform: scale(1.2);
-	}
-
-	svg {
-		pointer-events: none;
-	}
-
-	&--broken-heart-active {
-
-		svg {
-			fill: red;
-		}
-	}
+.action-button-group {
+	display: none;
 }

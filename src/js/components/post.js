@@ -65,7 +65,7 @@ class Post {
 				dbUpdate(this, 'likes');
 				updateLikeCount(this);
 
-			} else if (clickTargetClassList.indexOf('custom-icon--broken-heart') === 1) {
+			} else if (clickTargetClassList.indexOf('custom-icon-broken-heart') === 1) {
 				// console.log('dislike');
 				dbUpdate(this, 'dislikes');
 			}

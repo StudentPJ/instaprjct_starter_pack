@@ -35,18 +35,45 @@
 		</ul>
 	{{/if}}
 	<div class="f f-align-1-2">
-		<button class="post__like">
-			<span class="fa {{#if liked}}fa-heart{{else}}fa-heart-o{{/if}}"></span>
-			{{#if likesCount}}
-				<span>{{ likesCount }}</span>
-			{{/if}}
-		</button>
-		<button class="post__dislike">
-			<span class="custom-icon {{#if disliked}}custom-icon--broken-heart-active{{else}}custom-icon--broken-heart{{/if}}">
-		      <svg fill="#231F20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><g><path
-				      d="M469.7 74.3c-51.1-51.1-131-55.7-187.4-14 4.9 8 10 16 14.7 24.1 9.3 15.4 17.9 31 26.4 46.7 8.7 15.6 17.1 31.4 25.3 47.2l10 19.4-21 11.8c-39.7 22.3-80.1 43.1-121 63.1 11.3 37.4 21.8 75 31 113.1 3 11.3 5.3 22.8 7.8 34.3 2.5 11.4 5.1 22.9 7.2 34.5 1.6 8.2 3 16.5 4.5 24.7 4.4-3.5 8.7-7.1 12.8-11.2l189.9-189.9c56.1-56.2 56.1-147.5-.2-203.8z"/><path
-				      d="M225.9 429.8c-4.8-10.7-9.9-21.3-14.3-32.1-18.5-43-35.5-86.5-51-130.5l-7.4-20.9 20.5-10.7c40.4-21.1 81.5-41 123.1-59.8-3.5-9.3-7.2-18.5-10.6-27.9-6.2-16.7-12.3-33.6-17.8-50.6-2.2-6.5-4.1-13-6.2-19.5l-4.3 4.3-10.1-7.9C191.4 18 97.9 18 41.6 74.3c-56.3 56.3-55.2 147.6 1.1 203.9l191 189.9c5 5 10.7 9.4 17 13.4-3.3-6.6-6.7-13.1-9.9-19.7-5.3-10.6-10.1-21.3-14.9-32z"/></g></svg>
-	        </span>
+		<div class="post__action-wrapper">
+			<div class="action-button-group">
+				<button type="button">
+					<svg class="custom-icon custom-icon-smiley-face">
+						<use xlink:href="#custom-icon-smiley-face"></use>
+					</svg>
+				</button>
+				<button type="button">
+					<svg class="custom-icon custom-icon-sad-face">
+						<use xlink:href="#custom-icon-sad-face"></use>
+					</svg>
+				</button>
+				<button type="button">
+					<svg class="custom-icon custom-icon-angry-face">
+						<use xlink:href="#custom-icon-angry-face"></use>
+					</svg>
+				</button>
+				<button type="button">
+					<svg class="custom-icon custom-icon-surprised-face">
+						<use xlink:href="#custom-icon-surprised-face"></use>
+					</svg>
+				</button>
+				<button type="button">
+					<svg class="custom-icon custom-icon-thumbs-up">
+						<use xlink:href="#custom-icon-thumbs-up"></use>
+					</svg>
+				</button>
+			</div>
+			<button type="button" class="post__like">
+				<span class="fa {{#if liked}}fa-heart{{else}}fa-heart-o{{/if}}"></span>
+				{{#if likesCount}}
+					<span>{{ likesCount }}</span>
+				{{/if}}
+			</button>
+		</div>
+		<button type="button" class="post__dislike">
+			<svg class="custom-icon {{#if disliked}}custom-icon-broken-heart-active{{else}}custom-icon-broken-heart{{/if}}">
+				<use xlink:href="#custom-icon-broken-heart"></use>
+			</svg>
 			{{#if dislikesCount}}
 				<span>{{ dislikesCount }}</span>
 			{{/if}}
