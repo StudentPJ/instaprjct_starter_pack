@@ -16,60 +16,6 @@
 		website: (param) => param,
 	};
 
-	Handlebars.registerHelper('preloader', (size, state) => {
-		return new Handlebars.SafeString(`
-			<div class="preloader-wrapper ${size} ${state}">
-				<div class="spinner-layer spinner-blue">
-					<div class="circle-clipper left">
-						<div class="circle"></div>
-					</div>
-					<div class="gap-patch">
-						<div class="circle"></div>
-					</div>
-					<div class="circle-clipper right">
-						<div class="circle"></div>
-					</div>
-				</div>
-		
-				<div class="spinner-layer spinner-red">
-					<div class="circle-clipper left">
-						<div class="circle"></div>
-					</div>
-					<div class="gap-patch">
-						<div class="circle"></div>
-					</div>
-					<div class="circle-clipper right">
-						<div class="circle"></div>
-					</div>
-				</div>
-		
-				<div class="spinner-layer spinner-yellow">
-					<div class="circle-clipper left">
-						<div class="circle"></div>
-					</div>
-					<div class="gap-patch">
-						<div class="circle"></div>
-					</div>
-					<div class="circle-clipper right">
-						<div class="circle"></div>
-					</div>
-				</div>
-		
-				<div class="spinner-layer spinner-green">
-					<div class="circle-clipper left">
-						<div class="circle"></div>
-					</div>
-					<div class="gap-patch">
-						<div class="circle"></div>
-					</div>
-					<div class="circle-clipper right">
-						<div class="circle"></div>
-					</div>
-				</div>
-			</div>
-		`)
-	});
-
 	Handlebars.registerHelper('socialIconFor', (name) => {
 		return icons[name] || '';
 	});

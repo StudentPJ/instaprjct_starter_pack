@@ -58,20 +58,19 @@ class Post {
 		this.element.addEventListener('click', (e) => {
 			e.stopImmediatePropagation();
 
-			let clickTargetClassList = e.target.className.split(' ');
+			let clickTarget = e.target.className;
 
-			if (clickTargetClassList.indexOf('fa-heart-o') === 1) {
+			if (clickTarget.split(' ').indexOf('fa-heart-o') === 1) {
 				// console.log('like');
 				dbUpdate(this, 'likes');
 				updateLikeCount(this);
 
-			} else if (clickTargetClassList.indexOf('custom-icon-broken-heart') === 1) {
+			} else if (clickTarget === 'post__dislike') {
 				// console.log('dislike');
 				dbUpdate(this, 'dislikes');
 			}
 		});
 		/*---=== /click on like or dislike ===---*/
-
 	}
 
 	getElement() {
@@ -99,7 +98,6 @@ class Post {
 		this.element.setAttribute('data-post', this.data.id);
 		this.liked = !!(this.data.likes && this.data.likes[this.currentUser.uid]);
 		this.disliked = !!(this.data.dislikes && this.data.dislikes[this.currentUser.uid]);
-		// this.likesCountNum = this.likesCount.likesCountNum
 		this.render();
 		console.log('data retrived', this.data);
 	}

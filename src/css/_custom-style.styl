@@ -7,11 +7,10 @@ body {
 	position relative;
 	min-height: 100%;
 
-	.preloader-wrapper {
+	> .preloader-wrapper {
 		position: absolute;
 		left: 50%;
-		top: 50%;
-		margin: -100px 0 0 -100px;
+		margin: 100px 0 0 -100px;
 
 		&.big {
 			width: 200px;
@@ -38,6 +37,19 @@ svg[class*="custom-icon-"] {
 	color: #333333;
 }
 
+.post__action-wrapper {
+	position: relative;
+
+	&:hover {
+
+		.action-button-group {
+			opacity: 1;
+			transform: translateY(0);
+			pointer-events: auto;
+		}
+	}
+}
+
 .post__like {
 
 	span.fa {
@@ -49,15 +61,57 @@ svg[class*="custom-icon-"] {
 	}
 }
 
-.custom-icon-broken-heart {
-	width: 18px;
-	height: 18px;
-	margin-right: 4px;
+.post__dislike {
+
+	svg {
+		width: 18px;
+		height: 18px;
+		margin-right: 4px;
+		pointer-events: none;
+		transition: transform .225s ease;
+	}
+
+	&:hover svg {
+		transform: scale(1.2);
+	}
+
 }
-.custom-icon-broken-heart-active {
-	fill: red;
+
+.custom-icon.custom-icon-broken-heart-active {
+	color: red;
 }
 
 .action-button-group {
-	display: none;
+	display: flex;
+	position: absolute;
+	min-width: 150px;
+	top: -55px;
+	opacity: 0;
+	padding: 10px 0;
+	background: #bfbfbf;
+	border-radius: 2px;
+	transform: translateY(10px);
+	pointer-events: none;
+	transition: opacity .225s ease,
+				transform .225s ease;
+
+	&__item {
+		background: none;
+		border: 1px solid transparent;
+		line-height: 1;
+		padding: 2px;
+		margin: 0 10px;
+		outline: none;
+		border-radius: 2px;
+		transition: border-color .255s ease;
+
+		.custom-icon {
+			width: 30px;
+			height: 30px;
+		}
+
+		&:hover {
+			border-color: gray;
+		}
+	}
 }
