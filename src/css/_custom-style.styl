@@ -1,3 +1,29 @@
+html,
+body {
+	height: 100%;
+}
+
+.main-wrapper {
+	position relative;
+	min-height: 100%;
+
+	.preloader-wrapper {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		margin: -100px 0 0 -100px;
+
+		&.big {
+			width: 200px;
+			height: 200px;
+
+			.circle-clipper .circle {
+				border-width: 6px;
+			}
+		}
+	}
+}
+
 .custom-icon {
 	display: inline-block;
 	width: 16px;
@@ -10,17 +36,6 @@
 
 svg[class*="custom-icon-"] {
 	color: #333333;
-}
-
-.custom-icon-empty-basket,
-.custom-icon-full-basket {
-	width: 20px;
-	height: 20px;
-}
-
-.custom-icon.custom-icon-button-cross {
-	color: #ffffff;
-	fill: #000000;
 }
 
 .post__like {
