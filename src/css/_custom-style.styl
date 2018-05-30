@@ -3,6 +3,16 @@ body {
 	height: 100%;
 }
 
+img:not([src]) {
+	visibility: hidden;
+}
+
+img[data-src],
+img[data-srcset] {
+	display: block;
+	min-height: 1px;
+}
+
 .main-wrapper {
 	position relative;
 	min-height: 100%;
@@ -21,6 +31,47 @@ body {
 				border-width: 6px;
 			}
 		}
+	}
+}
+
+
+.post {
+
+	&__content {
+		position: relative;
+	}
+
+	&__content-image-wrapper {
+		width: 100%;
+		min-height: 300px;
+		//height: 0;
+		//padding-bottom: 66.67%; /* You define this doing height / width * 100% */
+	}
+
+	&__content-image-item {
+		//width: 100%;
+		//position: absolute;
+		transition: opacity .225s ease;
+	}
+
+	.loading {
+		opacity: 0;
+	}
+
+	.loaded {
+		opacity: 1;
+	}
+
+	.preloader-wrapper {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin: -35px 0 0 -32px;
+		transition: opacity .225s ease;
+	}
+
+	.loaded + .preloader-wrapper {
+		opacity: 0;
 	}
 }
 
@@ -90,10 +141,12 @@ svg[class*="custom-icon-"] {
 	position: absolute;
 	min-width: 150px;
 	top: -55px;
+	left: -16px;
 	opacity: 0;
-	padding: 10px 0;
-	background: #bfbfbf;
-	border-radius: 2px;
+	padding: 6px;
+	background: #ffffff;
+	border-radius: 40px;
+	border: 1px solid rgba(#000000, 20%);
 	transform: translateY(10px);
 	pointer-events: none;
 	transition: opacity .225s ease,
@@ -101,22 +154,26 @@ svg[class*="custom-icon-"] {
 
 	&__item {
 		background: none;
-		border: 1px solid transparent;
+		border: 0 none;
+		padding: 0;
 		line-height: 1;
-		padding: 2px;
-		margin: 0 10px;
 		outline: none;
 		border-radius: 2px;
-		transition: border-color .255s ease;
+		transform-origin: bottom;
+		transition: transform .255s ease;
+
+		& + .action-button-group__item {
+			margin-left: 10px;
+		}
 
 		.custom-icon {
-			width: 30px;
-			height: 30px;
+			width: 40px;
+			height: 40px;
 			pointer-events: none;
 		}
 
 		&:hover {
-			border-color: gray;
+			transform: scale(1.3);
 		}
 	}
 }

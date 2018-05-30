@@ -87,6 +87,13 @@ class Post {
 			}
 		});
 		/*---=== /click on like or dislike ===---*/
+
+		let myLazyLoad = new LazyLoad();
+
+		[].slice.call(document.querySelectorAll('.post__content-image-item')).forEach((item) => {
+			console.dir(item);
+			console.log('clientHeight: ', item.height);
+		})
 	}
 
 	getElement() {

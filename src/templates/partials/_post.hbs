@@ -14,8 +14,10 @@
 </header>
 
 <div class="post__content">
-	{{!--> preloaderNew--}}
-	<img src="{{ url }}" alt="{{ name }}">
+	<div class="post__content-image-wrapper">
+		<img class="post__content-image-item" data-src="{{ url }}" alt="{{ name }}">
+		{{> preloaderNew}}
+	</div>
 </div>
 
 <footer class="post__footer">
