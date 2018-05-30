@@ -90,10 +90,18 @@ class Post {
 
 		let myLazyLoad = new LazyLoad();
 
-		[].slice.call(document.querySelectorAll('.post__content-image-item')).forEach((item) => {
+		// $('[data-toggle="tooltip"]').tooltip();
+
+		// $('[data-toggle="tooltip"]').tooltip()
+
+		/*[].slice.call(document.querySelectorAll('[data-toggle="tooltip"]')).forEach((item) => {
+			item.tooltip();
+		})*/
+
+		/*[].slice.call(document.querySelectorAll('.post__content-image-item')).forEach((item) => {
 			console.dir(item);
 			console.log('clientHeight: ', item.height);
-		})
+		})*/
 	}
 
 	getElement() {

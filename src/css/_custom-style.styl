@@ -153,6 +153,7 @@ svg[class*="custom-icon-"] {
 				transform .225s ease;
 
 	&__item {
+		position: relative;
 		background: none;
 		border: 0 none;
 		padding: 0;
@@ -174,6 +175,27 @@ svg[class*="custom-icon-"] {
 
 		&:hover {
 			transform: scale(1.3);
+
+			.action-button-group__tooltip {
+				opacity: 1;
+				transform: translate(-50%, 0);
+			}
 		}
+	}
+
+	&__tooltip {
+		color: #ffffff;
+		font-size: 10px;
+		padding: 3px 8px;
+		text-align: center;
+		white-space: nowrap;
+		background-color: #000;
+		border-radius: 4px;
+		opacity: 0;
+		position: absolute;
+		top: -25px;
+		transform: translate(-50%, -10px);
+		transition: opacity .225s ease,
+				    transform .225s ease;
 	}
 }
