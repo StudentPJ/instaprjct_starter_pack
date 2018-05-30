@@ -60,7 +60,13 @@ class Post {
 
 			let clickTarget = e.target.className;
 
-			if (clickTarget.split(' ').indexOf('fa-heart-o') === 1) {
+			let checkClass = className => {
+				if(e.target.className.split(' ').indexOf(className) === 1) {
+					return true;
+				}
+			};
+
+			if (clickTarget === 'post__like') {
 				// console.log('like');
 				dbUpdate(this, 'likes');
 				updateLikeCount(this);
@@ -68,6 +74,16 @@ class Post {
 			} else if (clickTarget === 'post__dislike') {
 				// console.log('dislike');
 				dbUpdate(this, 'dislikes');
+			} else if(checkClass('action-button-group__item--smiley-face')) {
+				console.log('smiley-face');
+			} else if(checkClass('action-button-group__item--sad-face')) {
+				console.log('sad-face');
+			} else if(checkClass('action-button-group__item--angry-face')) {
+				console.log('angry-face');
+			} else if(checkClass('action-button-group__item--surprised-face')) {
+				console.log('surprised-face');
+			} else if(checkClass('action-button-group__item--thumbs-up')) {
+				console.log('thumbs-up');
 			}
 		});
 		/*---=== /click on like or dislike ===---*/

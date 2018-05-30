@@ -65,7 +65,9 @@
 				</button>
 			</div>
 			<button type="button" class="post__like">
-				<span class="fa {{#if liked}}fa-heart{{else}}fa-heart-o{{/if}}"></span>
+				<svg class="custom-icon {{#if liked}}custom-icon-heart-active{{else}}custom-icon-heart{{/if}}">
+					<use xlink:href="#custom-icon-heart"></use>
+				</svg>
 				{{#if likesCount}}
 					<span>{{ likesCount }}</span>
 				{{/if}}

@@ -10,11 +10,12 @@ body {
 	> .preloader-wrapper {
 		position: absolute;
 		left: 50%;
-		margin: 100px 0 0 -100px;
+		top: 50%;
+		margin: -60px 0 0 -60px;
 
 		&.big {
-			width: 200px;
-			height: 200px;
+			width: 120px;
+			height: 120px;
 
 			.circle-clipper .circle {
 				border-width: 6px;
@@ -50,18 +51,8 @@ svg[class*="custom-icon-"] {
 	}
 }
 
+.post__dislike,
 .post__like {
-
-	span.fa {
-		transition: transform .225s ease;
-
-		&:hover {
-			transform: scale(1.2);
-		}
-	}
-}
-
-.post__dislike {
 
 	svg {
 		width: 18px;
@@ -77,8 +68,21 @@ svg[class*="custom-icon-"] {
 
 }
 
-.custom-icon.custom-icon-broken-heart-active {
+.post__like {
+
+	svg {
+		color: white;
+		fill: #000000;
+	}
+}
+
+.custom-icon.custom-icon-broken-heart-active,
+.custom-icon.custom-icon-heart-active {
 	color: red;
+}
+
+.custom-icon.custom-icon-heart-active {
+	fill: red;
 }
 
 .action-button-group {
@@ -108,6 +112,7 @@ svg[class*="custom-icon-"] {
 		.custom-icon {
 			width: 30px;
 			height: 30px;
+			pointer-events: none;
 		}
 
 		&:hover {

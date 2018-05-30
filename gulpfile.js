@@ -1,25 +1,27 @@
-const gulp = require('gulp');
-const stylus = require('gulp-stylus');
-const postcss = require('gulp-postcss');
+const gulp         = require('gulp');
+const stylus       = require('gulp-stylus');
+const postcss      = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
-const sourcemaps = require('gulp-sourcemaps');
-const concat = require('gulp-concat');
-const include = require('gulp-include');
-const gutil = require('gulp-util');
-const plumber = require('gulp-plumber');
-const notify = require('gulp-notify');
-const handlebars = require('gulp-handlebars');
-const wrap = require('gulp-wrap');
-const declare = require('gulp-declare');
-const cache = require('gulp-cached');
-const eslint = require('gulp-eslint');
-const merge = require('merge-stream');
-const sequence = require('run-sequence');
-const path = require('path');
-const del = require('del');
-const svgSprite = require("gulp-svg-sprites");
-const svgo = require('gulp-svgo');
-const server = require('browser-sync').create();
+const sourcemaps   = require('gulp-sourcemaps');
+const concat       = require('gulp-concat');
+const include      = require('gulp-include');
+const gutil        = require('gulp-util');
+const plumber      = require('gulp-plumber');
+const notify       = require('gulp-notify');
+const handlebars   = require('gulp-handlebars');
+const wrap         = require('gulp-wrap');
+const declare      = require('gulp-declare');
+const cache        = require('gulp-cached');
+const merge        = require('merge-stream');
+const sequence     = require('run-sequence');
+const path         = require('path');
+const del          = require('del');
+const svgSprite    = require("gulp-svg-sprites");
+const svgo         = require('gulp-svgo');
+const hbs          = require('handlebars');
+const plugins      = require('gulp-load-plugins')();
+const server       = require('browser-sync').create();
+const isProd       = gutil.env.prod;
 
 const errorHandler = (title = 'Error') => plumber({
 	errorHandler: notify.onError({
@@ -29,128 +31,34 @@ const errorHandler = (title = 'Error') => plumber({
 	})
 });
 
-const isProd = gutil.env.prod;
-
-gulp.task('server', () => {
-	server.init({
-		server: {
-			baseDir: ['public', 'src'],
-			routes: {
-				'/libs': 'node_modules'
-			}
-		},
-		files: [
-			'public/css/**/*.css',
-			'public/js/**/*.js',
-			'public/**/*.html'
-		],
-		open: gutil.env.open !== false,
-		ghostMode: false,
-		middleware: [
-			require('connect-history-api-fallback')()
-		]
-	});
-});
-
-
-gulp.task('styles', () => {
-	return gulp
-		.src('src/css/[^_]*.styl')
-		.pipe(errorHandler())
-		.pipe(sourcemaps.init())
-		.pipe(stylus({
-			paths: ['src/css', 'node_modules'],
-			'include css': true,
-			compress: isProd
-		}))
-		.pipe(postcss([autoprefixer()]))
-		.pipe(sourcemaps.write('./'))
-		.pipe(gulp.dest('public/css'));
-});
-
-
-const bundleScripts = (src) => {
-	return gulp
-		.src(src)
-		.pipe(errorHandler())
-		.pipe(sourcemaps.init())
-		.pipe(include({
-			includePaths: [
-				path.join(__dirname, 'node_modules'),
-				path.join(__dirname, 'src', 'js')
-			]
-		}))
-		.pipe(sourcemaps.write('./'))
-		.pipe(gulp.dest('public/js'));
+const svgoSettings = {
+	plugins: [
+		{removeViewBox: false},
+		{removeTitle: true},
+		{cleanupIDs: false}
+	]
 };
 
-gulp.task('scripts:vendor', () => {
-	return bundleScripts('src/js/vendor.js');
-});
+gulp.task('server', require('./gulp-tasks/server/server')(server, gutil));
 
-gulp.task('scripts:app', () => {
-	return bundleScripts('src/js/app.js');
-});
+gulp.task('styles', require('./gulp-tasks/styles/styles')(gulp, plugins, errorHandler, isProd, autoprefixer));
+
+gulp.task('scripts:vendor', require('./gulp-tasks/bundle-scripts/bundle-scripts')(gulp, plugins, 'src/js/vendor.js', errorHandler, path, __dirname));
+
+gulp.task('scripts:app', require('./gulp-tasks/bundle-scripts/bundle-scripts')(gulp, plugins, 'src/js/app.js', errorHandler, path, __dirname));
 
 gulp.task('scripts', [
 	'scripts:vendor',
 	'scripts:app'
 ]);
 
-
-gulp.task('lint', () => {
-	return gulp
-		.src([
-			'src/js/**/*.js',
-			'!src/js/vendor.js',
-			'!node_modules/**'
-		])
-		.pipe(errorHandler())
-		.pipe(cache('lint'))
-		.pipe(eslint())
-		.pipe(eslint.format());
-});
-
-
-gulp.task('templates', () => {
-	const hbs = require('handlebars');
-
-	const partials = gulp
-		.src('src/templates/**/_*.hbs')
-		.pipe(errorHandler())
-		.pipe(handlebars({
-			handlebars: hbs
-		}))
-		.pipe(wrap('Handlebars.registerPartial(<%= partName(file.relative) %>, Handlebars.template(<%= contents %>));', {}, {
-			imports: {
-				partName(fileName) {
-					return JSON.stringify(path.basename(fileName, '.js').substr(1));
-				}
-			}
-		}));
-
-
-	const templates = gulp
-		.src('src/templates/**/[^_]*.hbs')
-		.pipe(errorHandler())
-		.pipe(handlebars({
-			handlebars: hbs
-		}))
-		.pipe(wrap('Handlebars.template(<%= contents %>)'))
-		.pipe(declare({
-			namespace: 'templates',
-			noRedeclare: true
-		}));
-
-	return merge(partials, templates)
-		.pipe(concat('templates.js'))
-		.pipe(gulp.dest('public/js'));
-});
+gulp.task('templates', require('./gulp-tasks/templates/templates')(gulp, plugins, errorHandler, path, hbs, merge));
 
 gulp.task('static:html', () => {
 	return gulp
 		.src('src/index.html')
 		.pipe(errorHandler())
+		.pipe(include())
 		.pipe(gulp.dest('public'));
 });
 
@@ -180,41 +88,21 @@ gulp.task('static', ['static:html', 'static:images', 'static:fonts'], () => {
 		.pipe(gulp.dest('public'));
 });
 
-
 gulp.task('clean', () => {
 	return del('public').then((paths) => {
 		gutil.log('Deleted:', gutil.colors.magenta(paths.join('\n')));
 	});
 });
 
-
-gulp.task('build', (cb) => {
-	sequence(
-		'clean',
-		'styles',
-		'scripts',
-		/*'lint',*/
-		'templates',
-		'static',
-		cb
-	);
-});
-
 // minify svg files
-gulp.task('svgo', function () {
+gulp.task('svgo', () => {
 	return gulp.src('src/img/svg/*.svg')
-		.pipe(svgo({
-			plugins: [
-				{removeViewBox: false},
-				{removeTitle: true},
-				{cleanupIDs: false}
-			]
-		}))
+		.pipe(svgo(svgoSettings))
 		.pipe(gulp.dest('src/img/svg'));
 });
 
 // make sprite from svg files
-gulp.task('sprites', function () {
+gulp.task('sprites', () => {
 	return gulp.src('src/img/svg/*.svg')
 		.pipe(svgSprite({
 			mode: "symbols",
@@ -228,34 +116,42 @@ gulp.task('sprites', function () {
 });
 
 // minify svg sprite
-gulp.task('minify-svg-sprite', function () {
+gulp.task('minify-svg-sprite', () => {
 	return gulp.src('src/img/sprite/*.svg')
-		.pipe(svgo({
-			plugins: [
-				{removeViewBox: false},
-				{removeTitle: true},
-				{cleanupIDs: false}
-			]
-		}))
+		.pipe(svgo(svgoSettings))
 		.pipe(gulp.dest('src/img/sprite'))
 });
 
-gulp.task('svg-optimize-sprite', function (done) {
+// task that run consistently all tasks that create svg sprite
+gulp.task('svg-optimize-sprite', (done) => {
 	sequence('svgo', 'sprites', 'minify-svg-sprite', function () {
 		done();
 	});
 });
 
+// build task
+gulp.task('build', (cb) => {
+	sequence(
+		'clean',
+		'styles',
+		'scripts',
+		'templates',
+		'svg-optimize-sprite',
+		'static',
+		cb
+	);
+});
 
+// watch task
 gulp.task('watch', () => {
 	gulp.watch('src/css/**/*.styl', ['styles']);
-	gulp.watch(['src/js/**/*.js', '!src/js/vendor.js'], ['scripts:app'/*, 'lint'*/]);
+	gulp.watch(['src/js/**/*.js', '!src/js/vendor.js'], ['scripts:app']);
 	gulp.watch('!src/js/vendor.js', ['scripts:vendor']);
 	gulp.watch('src/index.html', ['static:html']);
 	gulp.watch('src/templates/**/*.hbs', ['templates']);
 });
 
-
+// default task
 gulp.task('default', () => {
 	sequence(
 		'build',
