@@ -41,7 +41,7 @@
 		{{#if emotions}}
 		<div class="emotion-list">
 			{{#each emotions}}
-				<svg style="z-index: {{inc @index}}" class="custom-icon custom-icon-{{emotionType}}">
+				<svg style="z-index: {{inc @index}}" data-author="{{createdByUserName}}" data-time="{{createdAt}}" class="custom-icon custom-icon-{{emotionType}}">
 					<use xlink:href="#custom-icon-{{emotionType}}"></use>
 				</svg>
 			{{/each}}
