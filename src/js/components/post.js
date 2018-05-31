@@ -9,6 +9,7 @@ class Post {
 		this.currentUser = this.props.currentUser;
 		this.liked = false; // is post liked by currentUser?
 		this.disliked = false; // is post disliked by currentUser?
+		this.emotionally = false; // is post emotional by currentUser?
 
 		this._onDataRetrieved = this._onDataRetrieved.bind(this);
 		// this._onDataChanged();
@@ -27,23 +28,27 @@ class Post {
 				likesCount: Object.keys((this.data && this.data.likes) || {}).length,
 				disliked: this.disliked,
 				dislikesCount: Object.keys((this.data && this.data.dislikes) || {}).length,
+				emotionally: this.emotionally,
+				emotionsCount: Object.keys((this.data && this.data.emotions) || {}).length,
 				isOwner: this.data.author === this.currentUser.uid
 			})
 		);
 		console.log('this is this', this);
 		console.timeEnd('render');
 
+		let dbConnect = firebase.database();
+
 		/*---=== update likes count ===---*/
-		function updateLikeCount(elemThis) {
-			firebase.database().ref(`posts/${elemThis.data.id}`).update({
+		let updateLikeCount = elemThis => {
+			dbConnect.ref(`posts/${elemThis.data.id}`).update({
 				likesCountNum: Object.keys((elemThis.data && elemThis.data.likes) || {}).length
 			});
-		}
+		};
 		/*---=== /update likes count ===---*/
 
 		/*---=== update db data on like or dislike ===---*/
-		function dbUpdate(elemThis, child) {
-			firebase.database().ref(`posts/${elemThis.data.id}`).child(child).update({
+		let dbUpdate = (elemThis, child) => {
+			dbConnect.ref(`posts/${elemThis.data.id}`).child(child).update({
 				[elemThis.currentUser.uid]: {
 					createdByUserName: elemThis.currentUser.username,
 					createdByUserEmail: elemThis.currentUser.email,
@@ -51,57 +56,58 @@ class Post {
 					createdAt: (new Date()).toLocaleString('uk'),
 				}
 			});
-		}
+		};
 		/*---=== /update db data on like or dislike ===---*/
+
+		/*---=== update db data on emotions ===---*/
+		let emotionsDbUpdate = (elemThis, emotionType) => {
+			dbConnect.ref(`posts/${elemThis.data.id}`).child('emotions').update({
+				[elemThis.currentUser.uid]: {
+					createdByUserName: elemThis.currentUser.username,
+					createdByUserEmail: elemThis.currentUser.email,
+					emotionType: emotionType,
+					createdAt: (new Date()).toLocaleString('uk')
+				}
+			});
+		};
+		/*---=== /update db data on emotions ===---*/
 
 		/*---=== click on like or dislike ===---*/
 		this.element.addEventListener('click', (e) => {
 			e.stopImmediatePropagation();
 
-			let clickTarget = e.target.className;
+			let clickTarget = e.target;
+			let clickTargetClass = clickTarget.className;
+			let likeIcon = clickTarget.querySelector(".custom-icon").classList.contains('custom-icon-heart-active');
 
-			let checkClass = className => {
-				if(e.target.className.split(' ').indexOf(className) === 1) {
+			// check class on clicked element
+			let checkClass = classNamePart => {
+				if(e.target.classList.contains(`action-button-group__item--${classNamePart}`)) {
 					return true;
 				}
 			};
 
-			if (clickTarget === 'post__like') {
-				// console.log('like');
+			if (clickTargetClass === 'post__like' && !likeIcon) {
 				dbUpdate(this, 'likes');
 				updateLikeCount(this);
-
-			} else if (clickTarget === 'post__dislike') {
-				// console.log('dislike');
+			} else if (clickTargetClass === 'post__dislike') {
 				dbUpdate(this, 'dislikes');
-			} else if(checkClass('action-button-group__item--smiley-face')) {
-				console.log('smiley-face');
-			} else if(checkClass('action-button-group__item--sad-face')) {
-				console.log('sad-face');
-			} else if(checkClass('action-button-group__item--angry-face')) {
-				console.log('angry-face');
-			} else if(checkClass('action-button-group__item--surprised-face')) {
-				console.log('surprised-face');
-			} else if(checkClass('action-button-group__item--thumbs-up')) {
-				console.log('thumbs-up');
+			} else if(checkClass('smiley-face')) {
+				emotionsDbUpdate(this, 'smiley-face');
+			} else if(checkClass('sad-face')) {
+				emotionsDbUpdate(this, 'sad-face');
+			} else if(checkClass('angry-face')) {
+				emotionsDbUpdate(this, 'angry-face');
+			} else if(checkClass('surprised-face')) {
+				emotionsDbUpdate(this, 'surprised-face');
+			} else if(checkClass('thumbs-up')) {
+				emotionsDbUpdate(this, 'thumbs-up');
 			}
 		});
 		/*---=== /click on like or dislike ===---*/
 
+		// init LazyLoad plugin
 		let myLazyLoad = new LazyLoad();
-
-		// $('[data-toggle="tooltip"]').tooltip();
-
-		// $('[data-toggle="tooltip"]').tooltip()
-
-		/*[].slice.call(document.querySelectorAll('[data-toggle="tooltip"]')).forEach((item) => {
-			item.tooltip();
-		})*/
-
-		/*[].slice.call(document.querySelectorAll('.post__content-image-item')).forEach((item) => {
-			console.dir(item);
-			console.log('clientHeight: ', item.height);
-		})*/
 	}
 
 	getElement() {
@@ -129,6 +135,7 @@ class Post {
 		this.element.setAttribute('data-post', this.data.id);
 		this.liked = !!(this.data.likes && this.data.likes[this.currentUser.uid]);
 		this.disliked = !!(this.data.dislikes && this.data.dislikes[this.currentUser.uid]);
+		this.emotionally = !!(this.data.emotions && this.data.emotions[this.currentUser.uid]);
 		this.render();
 		console.log('data retrived', this.data);
 	}
