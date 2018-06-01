@@ -38,6 +38,15 @@ class Post {
 
 		let dbConnect = firebase.database();
 
+		let emotionIndex = () => {
+			[].slice.call(document.querySelectorAll('.emotion-list')).forEach(item => {
+				let svg = [].slice.call(item.querySelectorAll('svg'));
+				svg.forEach((item, index) => {
+					item.style.zIndex = svg.length - index;
+				});
+			});
+		};
+
 		/*---=== update likes count ===---*/
 		let updateLikeCount = elemThis => {
 			dbConnect.ref(`posts/${elemThis.data.id}`).update({
@@ -61,6 +70,7 @@ class Post {
 
 		/*---=== update db data on emotions ===---*/
 		let emotionsDbUpdate = (elemThis, emotionType) => {
+			emotionIndex();
 			dbConnect.ref(`posts/${elemThis.data.id}`).child('emotions').update({
 				[elemThis.currentUser.uid]: {
 					createdByUserName: elemThis.currentUser.username,
@@ -71,6 +81,8 @@ class Post {
 			});
 		};
 		/*---=== /update db data on emotions ===---*/
+
+		emotionIndex();
 
 		/*---=== click on like or dislike ===---*/
 		this.element.addEventListener('click', (e) => {

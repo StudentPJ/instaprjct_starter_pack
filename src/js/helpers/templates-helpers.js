@@ -37,14 +37,6 @@
 		return moment(dateString).fromNow(true);
 	});
 
-	Handlebars.registerHelper('reverse', function (arr) {
-		arr.reverse();
-	});
-
-	Handlebars.registerHelper('inc', (value, options) => {
-		return parseInt(value) + 1;
-	});
-
 	Handlebars.registerHelper('sortBy', () => {
 	});
 
