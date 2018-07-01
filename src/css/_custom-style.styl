@@ -43,14 +43,14 @@ img[data-srcset] {
 
 	&__content-image-wrapper {
 		width: 100%;
-		min-height: 300px;
-		//height: 0;
-		//padding-bottom: 66.67%; /* You define this doing height / width * 100% */
+		//min-height: 300px;
+		height: 0;
+		padding-bottom: 66.66666666666667%; /* You define this doing height / width * 100% */
 	}
 
 	&__content-image-item {
-		//width: 100%;
-		//position: absolute;
+		width: 100%;
+		position: absolute;
 		transition: opacity .225s ease;
 	}
 
@@ -110,11 +110,19 @@ svg[class*="custom-icon-"] {
 		height: 18px;
 		margin-right: 4px;
 		pointer-events: none;
+		/*transition: width .225s ease,
+					height .225s ease;*/
+
 		transition: transform .225s ease;
 	}
 
+	/*&:hover svg {
+		width: 28px;
+		height: 28px;
+	}*/
+
 	&:hover svg {
-		transform: scale(1.2);
+		transform: scale(1.23)
 	}
 
 }
@@ -140,7 +148,6 @@ svg[class*="custom-icon-"] {
 	display: inline-flex;
 	height: 32px;
 	align-items: center;
-	//direction: rtl;
 
 	.custom-icon {
 		width: 18px;
@@ -212,4 +219,8 @@ svg[class*="custom-icon-"] {
 		transition: opacity .225s ease,
 				    transform .225s ease;
 	}
+}
+
+.feed {
+	max-width 602px;
 }

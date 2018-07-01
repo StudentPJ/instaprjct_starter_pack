@@ -12,7 +12,6 @@ class Post {
 		this.emotionally = false; // is post emotional by currentUser?
 
 		this._onDataRetrieved = this._onDataRetrieved.bind(this);
-		// this._onDataChanged();
 
 		this._setupDomElement();
 		this._setupDbRef(post);
@@ -39,8 +38,19 @@ class Post {
 		let dbConnect = firebase.database();
 
 		let emotionIndex = () => {
-			[].slice.call(document.querySelectorAll('.emotion-list')).forEach(item => {
-				let svg = [].slice.call(item.querySelectorAll('svg'));
+			[].slice.call(document.querySelectorAll('.emotion-list')).forEach(itemElem => {
+				let svg = [].slice.call(itemElem.querySelectorAll('svg'));
+
+				let newOrder = svg.sort((a, b) => {
+					let c = new Date(a.getAttribute('data-time'));
+					let d = new Date(b.getAttribute('data-time'));
+					return d - c;
+				});
+
+				newOrder.forEach(item => {
+					itemElem.appendChild(item);
+				});
+
 				svg.forEach((item, index) => {
 					item.style.zIndex = svg.length - index;
 				});
@@ -94,7 +104,7 @@ class Post {
 
 			// check class on clicked element
 			let checkClass = classNamePart => {
-				if(e.target.classList.contains(`action-button-group__item--${classNamePart}`)) {
+				if(clickTarget.classList.contains(`action-button-group__item--${classNamePart}`)) {
 					return true;
 				}
 			};
@@ -148,6 +158,7 @@ class Post {
 		this.liked = !!(this.data.likes && this.data.likes[this.currentUser.uid]);
 		this.disliked = !!(this.data.dislikes && this.data.dislikes[this.currentUser.uid]);
 		this.emotionally = !!(this.data.emotions && this.data.emotions[this.currentUser.uid]);
+
 		this.render();
 		console.log('data retrived', this.data);
 	}
